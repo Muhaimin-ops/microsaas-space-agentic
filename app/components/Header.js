@@ -1,10 +1,49 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "../providers/AuthProvider";
+import { useRouter } from "next/navigation";
 
 export default function Header({ onMenuClick, title = "Dashboard" }) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+
+  const getUserInitials = () => {
+    if (!user) return "?";
+    if (user.name) {
+      return user.name
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return user.email ? user.email[0].toUpperCase() : "U";
+  };
+
+  const getRoleBadgeStyle = (role) => {
+    const colors = {
+      founder: { bg: "#dbeafe", color: "#1e40af" },
+      developer: { bg: "#dcfce7", color: "#166534" },
+      marketer: { bg: "#fef3c7", color: "#92400e" },
+      admin: { bg: "#fee2e2", color: "#991b1b" },
+    };
+    return colors[role] || colors.founder;
+  };
+
+  const handleLogout = async () => {
+    setShowProfile(false);
+    await signOut();
+  };
+
+  const handleProfile = () => {
+    setShowProfile(false);
+    router.push("/dashboard/profile");
+  };
+
+  const roleStyle = user?.role ? getRoleBadgeStyle(user.role) : null;
 
   return (
     <header style={styles.header}>
@@ -41,19 +80,41 @@ export default function Header({ onMenuClick, title = "Dashboard" }) {
             onClick={() => setShowProfile(!showProfile)}
             style={styles.profileButton}
           >
-            <div style={styles.avatar}>A</div>
-            <span style={styles.profileName}>Admin</span>
+            <div style={styles.avatar}>{getUserInitials()}</div>
+            <div style={styles.profileInfo}>
+              <span style={styles.profileName}>
+                {user?.name || user?.email?.split("@")[0] || "User"}
+              </span>
+              {user?.role && (
+                <span style={{
+                  ...styles.roleBadge,
+                  backgroundColor: roleStyle.bg,
+                  color: roleStyle.color,
+                }}>
+                  {user.role}
+                </span>
+              )}
+            </div>
             <span style={styles.chevron}>▼</span>
           </button>
 
           {showProfile && (
             <div style={styles.dropdown}>
-              <a href="#profile" style={styles.dropdownItem}>
+              <div style={styles.dropdownHeader}>
+                <div style={styles.dropdownEmail}>{user?.email}</div>
+              </div>
+              <button 
+                onClick={handleProfile}
+                style={styles.dropdownButton}
+              >
                 👤 Profile
-              </a>
-              <a href="#logout" style={styles.dropdownItem}>
+              </button>
+              <button 
+                onClick={handleLogout}
+                style={styles.dropdownButton}
+              >
                 🚪 Logout
-              </a>
+              </button>
             </div>
           )}
         </div>
@@ -175,8 +236,30 @@ const styles = {
     backgroundColor: "white",
     borderRadius: "8px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    minWidth: "150px",
+    minWidth: "200px",
     overflow: "hidden",
+  },
+  dropdownHeader: {
+    padding: "0.75rem 1rem",
+    borderBottom: "1px solid #e5e7eb",
+    backgroundColor: "#f9fafb",
+  },
+  dropdownEmail: {
+    fontSize: "0.875rem",
+    color: "#6b7280",
+    fontWeight: "500",
+  },
+  dropdownButton: {
+    display: "block",
+    width: "100%",
+    padding: "0.75rem 1rem",
+    color: "#1a1f2e",
+    backgroundColor: "transparent",
+    border: "none",
+    textAlign: "left",
+    fontSize: "0.95rem",
+    cursor: "pointer",
+    transition: "background-color 0.2s",
   },
   dropdownItem: {
     display: "block",
@@ -185,5 +268,18 @@ const styles = {
     textDecoration: "none",
     transition: "background-color 0.2s",
     fontSize: "0.95rem",
+  },
+  profileInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "0.25rem",
+  },
+  roleBadge: {
+    padding: "0.125rem 0.375rem",
+    borderRadius: "0.25rem",
+    fontSize: "0.7rem",
+    fontWeight: "600",
+    textTransform: "capitalize",
   },
 };

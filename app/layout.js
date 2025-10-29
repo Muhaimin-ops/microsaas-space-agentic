@@ -1,3 +1,5 @@
+import AuthProvider from './providers/AuthProvider';
+
 export const metadata = {
   title: 'Micro-SaaS Space',
   description: 'A universal AI-driven platform empowering non-technical founders to build, launch, and automate their micro-SaaS products effortlessly.',
@@ -11,7 +13,9 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body style={{ margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
