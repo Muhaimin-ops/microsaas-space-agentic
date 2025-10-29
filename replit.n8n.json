@@ -4,8 +4,8 @@
   "description": "Automation configuration for Micro-SaaS Space: the AI-driven SaaS builder for non-technical founders.",
   "integrations": {
     "supabase": {
-      "baseUrl": "https://YOUR_SUPABASE_URL.supabase.co",
-      "apiKey": "SUPABASE_PLACEHOLDER_KEY",
+      "baseUrl": "https://nzwzwvykcyzscvlwlfvq.supabase.co",
+      "apiKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56d3p3dnlrY3l6c2N2bHdsZnZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NjQwODYsImV4cCI6MjA3NzM0MDA4Nn0.ZyAiptRjY-UmUg1InqRzTvLOhd8VPvoSh_GxgfxRl4I",
       "tables": ["validated_ideas", "blueprints", "pricing_models", "analytics", "feedback"]
     },
     "replit": {
@@ -159,4 +159,3 @@
     }
   ]
 }
-
