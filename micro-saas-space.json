@@ -1,1 +1,104 @@
-
+{
+  "project": {
+    "name": "Micro-SaaS Space",
+    "description": "A universal AI-driven platform empowering non-technical founders to build, launch, and automate their micro-SaaS products effortlessly."
+  },
+  "core_agents": [
+    {
+      "id": "market_research_agent",
+      "name": "Market Research & Validation",
+      "role": "Analyze trending SaaS ideas and validate them through community data (Reddit, Indie Hackers, Product Hunt, Twitter).",
+      "tasks": [
+        "Fetch and summarize trending micro-SaaS discussions from key startup platforms.",
+        "Score and validate ideas using engagement metrics and pain-point frequency.",
+        "Generate concise reports with actionable validation summaries.",
+        "Store validated ideas in the Supabase 'ideas' table for founder access."
+      ]
+    },
+    {
+      "id": "idea_refinement_agent",
+      "name": "Idea Refinement & Positioning",
+      "role": "Convert raw SaaS ideas into refined, investor-ready concepts with unique positioning.",
+      "tasks": [
+        "Rewrite validated ideas into clear SaaS product pitches.",
+        "Define the problem statement, solution, target audience, and USP.",
+        "Generate product names, taglines, and brand storylines automatically.",
+        "Store refined outputs to Supabase and tag them by category."
+      ]
+    },
+    {
+      "id": "landing_page_agent",
+      "name": "Landing Page & Copywriter",
+      "role": "Generate launch-ready landing pages for each validated idea.",
+      "tasks": [
+        "Generate SEO-optimized landing page content and hero copy.",
+        "Produce UI structure in React (Next.js) with Tailwind styling.",
+        "Integrate newsletter and signup components using Supabase Auth.",
+        "Publish generated pages to Replit-hosted preview links."
+      ]
+    },
+    {
+      "id": "automation_agent",
+      "name": "Backend Automation (n8n / Replit Tasks)",
+      "role": "Automate the marketing and operational pipelines for each SaaS product.",
+      "tasks": [
+        "Build n8n workflows for social media posting, newsletter scheduling, and analytics tracking.",
+        "Monitor campaign metrics via Google Analytics API and update performance dashboards.",
+        "Trigger auto-iterations of idea generation based on trend shifts."
+      ]
+    },
+    {
+      "id": "growth_agent",
+      "name": "Marketing & Community Growth",
+      "role": "Help founders grow their SaaS user base using automated outreach and content workflows.",
+      "tasks": [
+        "Generate weekly marketing ideas and content calendars.",
+        "Auto-create social media posts, blog outlines, and newsletters.",
+        "Analyze growth metrics and recommend improvements for each SaaS project."
+      ]
+    },
+    {
+      "id": "feedback_loop_agent",
+      "name": "Self-Improvement & Iteration Engine",
+      "role": "Continuously refine SaaS ideas and workflows based on analytics and feedback.",
+      "tasks": [
+        "Analyze product analytics, CTR, and user engagement metrics.",
+        "Iterate on copy, design, and automation workflows using AI feedback.",
+        "Auto-update Supabase database and notify founders about improvements."
+      ]
+    }
+  ],
+  "automation_workflows": [
+    {
+      "id": "daily_trend_sync",
+      "description": "Runs every 24h to fetch new SaaS ideas and validate trends.",
+      "agents_involved": ["market_research_agent", "idea_refinement_agent"],
+      "trigger": "cron:0 9 * * *"
+    },
+    {
+      "id": "weekly_launch_cycle",
+      "description": "Every week, generate landing pages and marketing assets for top 3 ideas.",
+      "agents_involved": ["landing_page_agent", "growth_agent", "automation_agent"],
+      "trigger": "cron:0 10 * * MON"
+    },
+    {
+      "id": "continuous_learning_loop",
+      "description": "Monitor metrics and optimize outputs across all agents.",
+      "agents_involved": ["feedback_loop_agent", "growth_agent"],
+      "trigger": "analytics_event:metric_update"
+    }
+  ],
+  "integrations": {
+    "database": "Supabase",
+    "workflow_automation": "n8n (Replit-hosted)",
+    "frontend_framework": "Next.js + Tailwind",
+    "auth": "Supabase Auth",
+    "analytics": "Google Analytics 4 API",
+    "ai_services": ["OpenAI GPT-5", "Replit Code Intelligence"]
+  },
+  "meta": {
+    "version": "1.0.0",
+    "created_by": "Muhaimin (Akash)",
+    "last_updated": "2025-10-30"
+  }
+}
