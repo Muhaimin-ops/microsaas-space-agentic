@@ -1,1 +1,162 @@
+{
+  "project": "micro-saas-space",
+  "version": "1.0.0",
+  "description": "Automation configuration for Micro-SaaS Space: the AI-driven SaaS builder for non-technical founders.",
+  "integrations": {
+    "supabase": {
+      "baseUrl": "https://YOUR_SUPABASE_URL.supabase.co",
+      "apiKey": "SUPABASE_PLACEHOLDER_KEY",
+      "tables": ["validated_ideas", "blueprints", "pricing_models", "analytics", "feedback"]
+    },
+    "replit": {
+      "workspace": "micro-saas-space",
+      "env": "production"
+    }
+  },
+  "workflows": [
+    {
+      "name": "discover_and_validate",
+      "trigger": "schedule.every_12_hours",
+      "nodes": [
+        {
+          "id": "market_research_agent",
+          "type": "agent",
+          "action": "scrape_trending_ideas",
+          "output": "validated_ideas"
+        },
+        {
+          "id": "supabase_store_validated",
+          "type": "database",
+          "action": "insert",
+          "table": "validated_ideas",
+          "input": "validated_ideas"
+        }
+      ]
+    },
+    {
+      "name": "refine_and_blueprint",
+      "trigger": "supabase.insert.validated_ideas",
+      "nodes": [
+        {
+          "id": "idea_refinement_agent",
+          "type": "agent",
+          "action": "generate_blueprint",
+          "input": "validated_ideas"
+        },
+        {
+          "id": "uiux_agent",
+          "type": "agent",
+          "action": "generate_wireframes",
+          "input": "blueprint"
+        },
+        {
+          "id": "landing_page_agent",
+          "type": "agent",
+          "action": "create_landing_page",
+          "input": "blueprint"
+        },
+        {
+          "id": "supabase_store_blueprints",
+          "type": "database",
+          "action": "insert",
+          "table": "blueprints"
+        }
+      ]
+    },
+    {
+      "name": "pricing_and_launch",
+      "trigger": "supabase.insert.blueprints",
+      "nodes": [
+        {
+          "id": "pricing_agent",
+          "type": "agent",
+          "action": "generate_pricing_model",
+          "input": "blueprints"
+        },
+        {
+          "id": "automation_agent",
+          "type": "agent",
+          "action": "generate_n8n_workflow",
+          "input": "pricing_model"
+        },
+        {
+          "id": "growth_agent",
+          "type": "agent",
+          "action": "launch_marketing_campaign",
+          "input": "pricing_model"
+        },
+        {
+          "id": "supabase_store_pricing",
+          "type": "database",
+          "action": "insert",
+          "table": "pricing_models"
+        }
+      ]
+    },
+    {
+      "name": "analytics_and_feedback",
+      "trigger": "schedule.daily",
+      "nodes": [
+        {
+          "id": "analytics_agent",
+          "type": "agent",
+          "action": "fetch_analytics",
+          "output": "analytics"
+        },
+        {
+          "id": "feedback_agent",
+          "type": "agent",
+          "action": "collect_feedback",
+          "input": "analytics"
+        },
+        {
+          "id": "supabase_store_feedback",
+          "type": "database",
+          "action": "insert",
+          "table": "feedback"
+        }
+      ]
+    },
+    {
+      "name": "continuous_improvement",
+      "trigger": "supabase.insert.feedback",
+      "nodes": [
+        {
+          "id": "feedback_loop_agent",
+          "type": "agent",
+          "action": "analyze_performance",
+          "input": "feedback"
+        },
+        {
+          "id": "feedback_loop_update",
+          "type": "agent",
+          "action": "trigger_reoptimizations",
+          "targets": [
+            "landing_page_agent",
+            "pricing_agent",
+            "growth_agent"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "funding_and_support",
+      "trigger": "supabase.insert.blueprints",
+      "nodes": [
+        {
+          "id": "funding_agent",
+          "type": "agent",
+          "action": "generate_pitch_materials",
+          "input": "blueprints"
+        },
+        {
+          "id": "support_agent",
+          "type": "agent",
+          "action": "generate_documentation",
+          "input": "blueprints"
+        }
+      ]
+    }
+  ]
+}
 
