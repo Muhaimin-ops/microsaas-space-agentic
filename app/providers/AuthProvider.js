@@ -3,9 +3,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserClient } from "../../lib/supabase";
+import { getUserRole } from "../../lib/auth-helpers";
 
 const AuthContext = createContext({
   user: null,
+  role: null,
   loading: true,
   signOut: async () => {},
   refreshUser: async () => {},
@@ -23,6 +25,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +53,13 @@ export default function AuthProvider({ children }) {
           
           if (userData) {
             setUserDetails(userData);
+            // Set role explicitly
+            const role = getUserRole({ ...session.user, ...userData });
+            setUserRole(role);
+          } else {
+            // Even if no user data, try to get role from auth metadata
+            const role = getUserRole(session.user);
+            setUserRole(role);
           }
         }
       } catch (error) {
@@ -75,10 +85,18 @@ export default function AuthProvider({ children }) {
           
           if (userData) {
             setUserDetails(userData);
+            // Set role explicitly
+            const role = getUserRole({ ...session.user, ...userData });
+            setUserRole(role);
+          } else {
+            // Even if no user data, try to get role from auth metadata
+            const role = getUserRole(session.user);
+            setUserRole(role);
           }
         } else {
           setUser(null);
           setUserDetails(null);
+          setUserRole(null);
         }
         
         if (event === 'SIGNED_OUT') {
@@ -105,6 +123,7 @@ export default function AuthProvider({ children }) {
       await supabase.auth.signOut();
       setUser(null);
       setUserDetails(null);
+      setUserRole(null);
       router.push('/auth/login');
     } catch (error) {
       console.error("Error signing out:", error);
@@ -130,6 +149,13 @@ export default function AuthProvider({ children }) {
         
         if (userData) {
           setUserDetails(userData);
+          // Set role explicitly
+          const role = getUserRole({ ...user, ...userData });
+          setUserRole(role);
+        } else {
+          // Even if no user data, try to get role from auth metadata
+          const role = getUserRole(user);
+          setUserRole(role);
         }
       }
     } catch (error) {
@@ -138,7 +164,8 @@ export default function AuthProvider({ children }) {
   };
 
   const value = {
-    user: user ? { ...user, ...userDetails } : null,
+    user: user ? { ...user, ...userDetails, role: userRole } : null,
+    role: userRole,
     loading,
     signOut,
     refreshUser,
