@@ -91,9 +91,6 @@ const styles = {
     cursor: "pointer",
     borderRadius: "8px",
     transition: "background-color 0.2s",
-    "@media (min-width: 768px)": {
-      display: "none",
-    },
   },
   title: {
     fontSize: "1.5rem",
@@ -164,10 +161,7 @@ const styles = {
     fontSize: "0.95rem",
     fontWeight: "500",
     color: "#1a1f2e",
-    display: "none",
-    "@media (min-width: 640px)": {
-      display: "block",
-    },
+    display: "block",
   },
   chevron: {
     fontSize: "0.7rem",

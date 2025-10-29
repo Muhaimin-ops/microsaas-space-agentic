@@ -72,9 +72,6 @@ const styles = {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 40,
     display: "block",
-    "@media (min-width: 768px)": {
-      display: "none",
-    },
   },
   sidebar: {
     position: "fixed",
@@ -95,9 +92,6 @@ const styles = {
   },
   sidebarClosed: {
     transform: "translateX(-100%)",
-    "@media (min-width: 768px)": {
-      transform: "translateX(0)",
-    },
   },
   logo: {
     display: "flex",

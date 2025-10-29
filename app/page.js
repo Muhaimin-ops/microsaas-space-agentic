@@ -15,7 +15,7 @@ export default function Home() {
     const n8nHost = process.env.NEXT_PUBLIC_N8N_HOST;
     if (n8nHost) {
       try {
-        await fetch(`${n8nHost}/webhook-test/microsaas-space/newsletter`, {
+        await fetch(`${n8nHost}/webhook/microsaas-space/newsletter`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),

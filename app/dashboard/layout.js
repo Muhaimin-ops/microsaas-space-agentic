@@ -36,9 +36,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     marginLeft: 0,
-    "@media (min-width: 768px)": {
-      marginLeft: "260px",
-    },
   },
   content: {
     flex: 1,
