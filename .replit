@@ -29,13 +29,35 @@ waitForPort = 5000
 [workflows.workflow.metadata]
 outputType = "webview"
 
+[[workflows.workflow]]
+name = "install n8n"
+mode = "sequential"
+author = 46816312
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install -g n8n"
+
+[[workflows.workflow]]
+name = "n8n config"
+mode = "sequential"
+author = 46816312
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "n8n start --config replit.n8n.json"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 34463
+localPort = 5678
 externalPort = 3000
+
+[[ports]]
+localPort = 46393
+externalPort = 3001
 
 [deployment]
 deploymentTarget = "autoscale"

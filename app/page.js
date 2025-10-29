@@ -4,9 +4,12 @@ import { useState } from 'react';
 
 export default function Home() {
   const [email, setEmail] = useState('');
+  const [ideaText, setIdeaText] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [ideaSubmitted, setIdeaSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     
     const n8nHost = process.env.NEXT_PUBLIC_N8N_HOST;
@@ -26,6 +29,35 @@ export default function Home() {
     setEmail('');
   };
 
+  const handleIdeaSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/agents/idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          idea_text: ideaText,
+          source: 'landing_page',
+          submitted_by: email || 'anonymous'
+        }),
+      });
+
+      if (response.ok) {
+        setIdeaSubmitted(true);
+        setIdeaText('');
+      }
+    } catch (error) {
+      console.error('Failed to submit idea:', error);
+      alert('Failed to submit idea. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <main style={styles.main}>
@@ -41,7 +73,7 @@ export default function Home() {
             launch, and automate their micro-SaaS products effortlessly.
           </p>
 
-          <form onSubmit={handleSubmit} style={styles.form}>
+          <form onSubmit={handleNewsletterSubmit} style={styles.form}>
             <input
               type="email"
               placeholder="Enter your email"
@@ -58,6 +90,33 @@ export default function Home() {
           {submitted && (
             <p style={styles.success}>
               ✅ Thanks for signing up! We'll be in touch soon.
+            </p>
+          )}
+        </div>
+
+        <div style={styles.ideaSection}>
+          <h2 style={styles.ideaSectionTitle}>Have a SaaS Idea?</h2>
+          <p style={styles.ideaSectionSubtitle}>
+            Submit your idea and our AI agents will analyze, validate, and help you build it!
+          </p>
+          <form onSubmit={handleIdeaSubmit} style={styles.ideaForm}>
+            <textarea
+              placeholder="Describe your SaaS idea... (e.g., A tool that helps freelancers automate invoicing)"
+              value={ideaText}
+              onChange={(e) => setIdeaText(e.target.value)}
+              required
+              minLength={20}
+              style={styles.textarea}
+              rows={4}
+            />
+            <button type="submit" disabled={submitting} style={styles.ideaButton}>
+              {submitting ? 'Analyzing...' : 'Submit Idea'}
+            </button>
+          </form>
+
+          {ideaSubmitted && (
+            <p style={styles.ideaSuccess}>
+              ✅ Idea submitted! Our AI agents are analyzing it now.
             </p>
           )}
         </div>
@@ -252,5 +311,55 @@ const styles = {
     padding: '2rem',
     background: 'rgba(0, 0, 0, 0.2)',
     color: 'white',
+  },
+  ideaSection: {
+    textAlign: 'center',
+    padding: '3rem 2rem',
+    background: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: '1rem',
+    margin: '2rem 0',
+    color: 'white',
+  },
+  ideaSectionTitle: {
+    fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
+    fontWeight: '700',
+    marginBottom: '0.5rem',
+  },
+  ideaSectionSubtitle: {
+    fontSize: 'clamp(0.9rem, 2vw, 1.1rem)',
+    opacity: 0.9,
+    marginBottom: '2rem',
+  },
+  ideaForm: {
+    maxWidth: '600px',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
+  textarea: {
+    width: '100%',
+    padding: '1rem',
+    fontSize: '1rem',
+    borderRadius: '12px',
+    border: 'none',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+  },
+  ideaButton: {
+    padding: '1rem 2rem',
+    fontSize: '1rem',
+    fontWeight: '600',
+    background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    color: 'white',
+    border: 'none',
+    borderRadius: '50px',
+    cursor: 'pointer',
+    transition: 'transform 0.2s',
+  },
+  ideaSuccess: {
+    marginTop: '1rem',
+    color: '#d4edda',
+    fontWeight: '600',
   },
 };
