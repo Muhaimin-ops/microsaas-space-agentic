@@ -1,1 +1,84 @@
 
+modules = ["nodejs-20", "web"]
+
+[agent]
+expertMode = true
+# If you want agents to auto-run, set autoRun = true (careful in prod)
+autoRun = false
+
+[nix]
+channel = "stable-25_05"
+
+# Top-level workflows definition
+[workflows]
+runButton = "Project"
+
+# 1) Main dev server workflow (same as before)
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Dev Server"
+
+# Dev Server task (start dev server for the app)
+[[workflows.workflow]]
+name = "Dev Server"
+author = "agent"
+description = "Start Next.js dev server for frontend"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+# 2) AI Orchestration workflow — runs Replit agents in sequence
+[[workflows.workflow]]
+name = "MicroSaaS AI System"
+author = "agent"
+description = "Run the Micro-SaaS agent pipeline (Idea -> Validate -> Blueprint -> Build -> Launch)."
+
+[[workflows.workflow.tasks]]
+# Replit built-in agent runner: runs the agent configuration file
+task = "agent.run"
+args = "micro-saas-space.json"
+# optionally wait for dev server so local API endpoints are available
+waitFor = "Dev Server"
+
+[[workflows.workflow.tasks]]
+# optional: run a small orchestrator to do post-processing / checks
+task = "shell.exec"
+args = "node ai_pipeline.js"
+description = "orchestrator: sanity checks & results packaging"
+
+# 3) Idea→Automation trigger (calls external automation engine, e.g., n8n webhook)
+[[workflows.workflow]]
+name = "Idea to Automation Hook"
+author = "agent"
+description = "Trigger n8n automation flows and webhooks after deployment"
+
+[[workflows.workflow.tasks]]
+task = "http.post"
+args = "https://$N8N_HOST/webhook/microsaas-space/trigger"
+# The http.post task will read env var N8N_HOST at runtime.
+# Set N8N_HOST via Replit Secrets for security.
+
+# Ports used by the project
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3001
+
+# Deployment behavior (autoscale)
+[deployment]
+deploymentTarget = "autoscale"
+build = ["npm", "run", "build"]
+run = ["npm", "run", "preview"]
