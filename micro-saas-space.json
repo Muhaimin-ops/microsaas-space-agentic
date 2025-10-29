@@ -1,104 +1,128 @@
 {
-  "project": {
-    "name": "Micro-SaaS Space",
-    "description": "A universal AI-driven platform empowering non-technical founders to build, launch, and automate their micro-SaaS products effortlessly."
-  },
   "core_agents": [
     {
       "id": "market_research_agent",
       "name": "Market Research & Validation",
-      "role": "Analyze trending SaaS ideas and validate them through community data (Reddit, Indie Hackers, Product Hunt, Twitter).",
+      "role": "Discover and validate high-potential SaaS opportunities using public data and community discussions.",
       "tasks": [
-        "Fetch and summarize trending micro-SaaS discussions from key startup platforms.",
-        "Score and validate ideas using engagement metrics and pain-point frequency.",
-        "Generate concise reports with actionable validation summaries.",
-        "Store validated ideas in the Supabase 'ideas' table for founder access."
+        "Scrape trending startup and SaaS communities (Product Hunt, Reddit, Indie Hackers).",
+        "Perform semantic clustering to find common pain points.",
+        "Assign a Market Viability Score (MVS) based on engagement, urgency, and scalability.",
+        "Store top-ranked opportunities in Supabase under 'validated_ideas'."
       ]
     },
     {
       "id": "idea_refinement_agent",
-      "name": "Idea Refinement & Positioning",
-      "role": "Convert raw SaaS ideas into refined, investor-ready concepts with unique positioning.",
+      "name": "Idea Refinement & Product Blueprint",
+      "role": "Transform validated ideas into well-structured SaaS product blueprints ready for design and launch.",
       "tasks": [
-        "Rewrite validated ideas into clear SaaS product pitches.",
-        "Define the problem statement, solution, target audience, and USP.",
-        "Generate product names, taglines, and brand storylines automatically.",
-        "Store refined outputs to Supabase and tag them by category."
+        "Generate value propositions, core features, and differentiators.",
+        "Outline MVP scope, tech stack recommendation, and monetization model.",
+        "Write investor-style one-page summaries and elevator pitches.",
+        "Save outputs in Supabase with 'blueprint' tags."
+      ]
+    },
+    {
+      "id": "uiux_agent",
+      "name": "UI/UX & Prototype Designer",
+      "role": "Auto-generate initial UI wireframes, color palettes, and brand identity for each SaaS idea.",
+      "tasks": [
+        "Generate low-fidelity wireframes and component descriptions.",
+        "Create Tailwind + React templates ready to deploy on Replit.",
+        "Integrate with Landing Page Agent for real-time preview generation."
       ]
     },
     {
       "id": "landing_page_agent",
       "name": "Landing Page & Copywriter",
-      "role": "Generate launch-ready landing pages for each validated idea.",
+      "role": "Create compelling, conversion-optimized landing pages for SaaS launches.",
       "tasks": [
-        "Generate SEO-optimized landing page content and hero copy.",
-        "Produce UI structure in React (Next.js) with Tailwind styling.",
-        "Integrate newsletter and signup components using Supabase Auth.",
-        "Publish generated pages to Replit-hosted preview links."
+        "Generate hero sections, CTAs, and testimonials automatically.",
+        "Create full landing page structures using Next.js and Tailwind.",
+        "Embed Supabase-authenticated signup forms and mailing lists.",
+        "Deploy auto-preview URLs on Replit for founder review."
+      ]
+    },
+    {
+      "id": "pricing_agent",
+      "name": "Pricing Strategy Optimizer",
+      "role": "Design data-driven pricing models and plans for the SaaS product.",
+      "tasks": [
+        "Analyze competitors' pricing via scraped data and APIs.",
+        "Recommend tiered plans with psychological pricing and feature mapping.",
+        "Test pricing hypotheses with simulated market models.",
+        "Save optimized pricing tiers in Supabase under 'pricing_models'."
       ]
     },
     {
       "id": "automation_agent",
-      "name": "Backend Automation (n8n / Replit Tasks)",
-      "role": "Automate the marketing and operational pipelines for each SaaS product.",
+      "name": "Backend Automation (n8n Integrator)",
+      "role": "Automate SaaS marketing, content distribution, and analytics workflows.",
       "tasks": [
-        "Build n8n workflows for social media posting, newsletter scheduling, and analytics tracking.",
-        "Monitor campaign metrics via Google Analytics API and update performance dashboards.",
-        "Trigger auto-iterations of idea generation based on trend shifts."
+        "Auto-generate n8n JSON workflows for email campaigns, social posting, and data collection.",
+        "Connect Replit triggers to n8n webhooks for continuous automation.",
+        "Handle analytics syncs and Supabase data updates periodically."
       ]
     },
     {
       "id": "growth_agent",
-      "name": "Marketing & Community Growth",
-      "role": "Help founders grow their SaaS user base using automated outreach and content workflows.",
+      "name": "Marketing & Growth Strategist",
+      "role": "Scale user acquisition through automated community and content strategies.",
       "tasks": [
-        "Generate weekly marketing ideas and content calendars.",
-        "Auto-create social media posts, blog outlines, and newsletters.",
-        "Analyze growth metrics and recommend improvements for each SaaS project."
+        "Generate content calendars and growth experiments.",
+        "Auto-create blog posts, threads, and newsletters using AI templates.",
+        "Track engagement metrics and push growth updates to founders."
+      ]
+    },
+    {
+      "id": "analytics_agent",
+      "name": "Metrics & Insight Dashboard",
+      "role": "Analyze user behavior, retention, and campaign performance.",
+      "tasks": [
+        "Fetch analytics from GA4 and social APIs.",
+        "Visualize traffic sources and conversion rates using Supabase dashboards.",
+        "Send weekly AI summaries highlighting insights and growth suggestions."
+      ]
+    },
+    {
+      "id": "funding_agent",
+      "name": "Funding & Investor Assistant",
+      "role": "Help founders find relevant investors and prepare funding documents.",
+      "tasks": [
+        "Generate pitch decks and executive summaries from SaaS blueprints.",
+        "Match projects to investor databases based on market and stage.",
+        "Provide auto-generated outreach emails and LinkedIn pitch templates."
+      ]
+    },
+    {
+      "id": "feedback_agent",
+      "name": "Customer Feedback & Iteration Engine",
+      "role": "Continuously improve SaaS products based on customer and analytics data.",
+      "tasks": [
+        "Collect user reviews, form submissions, and NPS scores via APIs.",
+        "Summarize qualitative feedback using sentiment analysis.",
+        "Feed insights into the Iteration Engine for automated product improvements."
       ]
     },
     {
       "id": "feedback_loop_agent",
       "name": "Self-Improvement & Iteration Engine",
-      "role": "Continuously refine SaaS ideas and workflows based on analytics and feedback.",
+      "role": "Continuously refine ideas, marketing, and automations using live data feedback.",
       "tasks": [
-        "Analyze product analytics, CTR, and user engagement metrics.",
-        "Iterate on copy, design, and automation workflows using AI feedback.",
-        "Auto-update Supabase database and notify founders about improvements."
+        "Analyze all Supabase data streams and detect underperforming areas.",
+        "Trigger re-runs of relevant agents (copywriter, pricing, growth).",
+        "Automatically suggest improvements via AI reports sent to founders."
+      ]
+    },
+    {
+      "id": "support_agent",
+      "name": "AI Support & Documentation Assistant",
+      "role": "Provide 24/7 intelligent assistance and documentation for founders.",
+      "tasks": [
+        "Auto-generate help guides, FAQs, and onboarding tutorials.",
+        "Answer natural language queries about Micro-SaaS tools and integrations.",
+        "Maintain contextual chat memory for each founder session."
       ]
     }
-  ],
-  "automation_workflows": [
-    {
-      "id": "daily_trend_sync",
-      "description": "Runs every 24h to fetch new SaaS ideas and validate trends.",
-      "agents_involved": ["market_research_agent", "idea_refinement_agent"],
-      "trigger": "cron:0 9 * * *"
-    },
-    {
-      "id": "weekly_launch_cycle",
-      "description": "Every week, generate landing pages and marketing assets for top 3 ideas.",
-      "agents_involved": ["landing_page_agent", "growth_agent", "automation_agent"],
-      "trigger": "cron:0 10 * * MON"
-    },
-    {
-      "id": "continuous_learning_loop",
-      "description": "Monitor metrics and optimize outputs across all agents.",
-      "agents_involved": ["feedback_loop_agent", "growth_agent"],
-      "trigger": "analytics_event:metric_update"
-    }
-  ],
-  "integrations": {
-    "database": "Supabase",
-    "workflow_automation": "n8n (Replit-hosted)",
-    "frontend_framework": "Next.js + Tailwind",
-    "auth": "Supabase Auth",
-    "analytics": "Google Analytics 4 API",
-    "ai_services": ["OpenAI GPT-5", "Replit Code Intelligence"]
-  },
-  "meta": {
-    "version": "1.0.0",
-    "created_by": "Muhaimin (Akash)",
-    "last_updated": "2025-10-30"
-  }
+  ]
 }
